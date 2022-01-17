@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #outer {
+            margin-top:20rem;
+        }
+
+        .pushDown {
+            margin-top:3rem;
+        }
+
+        p {
+            color:red;
+        }
+    </style>
+</head>
+<body>
+    <section id="outer">
+        <h1>GT Food Truck</h1>
+        <form action="/login" method="POST">
+            <label for="usernameValue">Username</label>
+            <input type="text" id="username" name="usernameValue" required autocomplete="false" readonly onfocus="this.removeAttribute('readonly');">
+            <br>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required minlength="8" autocomplete="false" readonly onfocus="this.removeAttribute('readonly');">
+            <br>
+            <input type="submit" value="Login" name="login">
+            <input type="submit" value="Register" name="register" id="register">
+            <p>Error: Incorrect password</p>
+        </form>
+    </section>
+    <script>
+        let login = document.querySelector('.login');
+        let username = document.querySelector('.usernameValue');
+        let password = document.querySelector('#password');
+        let register = document.querySelector('#register');
+        let form = document.querySelector('form');
+        password.addEventListener('input', (e)=>{
+            console.log(password.value);
+            if (password.validity.tooShort) {
+                password.setCustomValidity('Password length needs to be >= 8');
+            } else {
+                password.setCustomValidity('');
+            }
+        });
+        register.addEventListener('click', (e)=>{
+            password.setCustomValidity(''); // don't need to require password when register button is clicked
+            password.setAttribute('minlength', '0');
+            password.toggleAttribute('required');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            height:100vh;
+            background-color: #091f36;
+        }
+
+        input, h1 {
+            color:white !important;
+        }
+
+        #outer {
+            margin-top:300px !important;
+        }
+
+        #usernameLabel {
+            visibility: hidden;
+        }
+
+        .moop {
+            visibility: hidden;
+        }
+
+        .hideThese {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .errors {
+            color:red;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- <input type="button" value="Explore" id="explore">
+    <input type="button" value="View Order History" id="viewOrderHistory">
+    <input type="button" value="View Current Information" id="viewCurrentInformation">
+    <input type="button" value="Manage Foodtrucks" id="manageFoodTrucks">
+    <input type="button" value="View Footruck Summary" id="viewFoodTruckSummary">
+    <input type="button" value="Manage Building & Station" id="manageBuildingAndStation">
+    <input type="button" value="Manage Food" id="manageFood"> -->
+    <div class="container" id="outer">
+        <h1 class=>Home</h1> 
+        <div class="row">
+            <div class="six columns" >
+                <form method="POST" class="foop" action="/explorepage"><input type="submit" value="Explore" id="explore" class="u-full-width"><label id="manageFoodError" class="errors"><%= registerError.exploreError %></label></form>
+                <form class="foop" method="POST" action="/orderhistory"><input type="submit" value="View Order History" id="viewOrderHistory" class="u-full-width"><label id="manageFoodError" class="errors"><%= registerError.historyError %></label></form>
+                <form class="foop" method="POST" action="/currentinformation"><input type="submit" value="View Current Information" id="viewCurrentInformation" class="u-full-width"><label id="currentInformationError" class="errors"><%= registerError.ciError %></form>
+                <form class="foop" method="POST" action="/managefoodtruckpage"><input type="submit" value="Manage Foodtrucks" id="manageFoodTrucks" class="u-full-width"><label id="manageFoodTruckError" class="errors"><%= registerError.mfError %></label></form>
+            </div>
+            <div class="six columns">
+                <form class="foop" action="/foodtrucksummarypage" method="POST"><input type="submit" value="View Footruck Summary" id="viewFoodTruckSummary" class="u-full-width"><label id="manageFoodError" class="errors"><%= registerError.ftsError %></label></form>
+                <form action="/managebuildingandstationpage" method = "POST" id="mbasForm" class="foop"><input type="submit" value="Manage Building & Station" id="manageBuildingAndStation" class="u-full-width"><label id="mbasError" class="errors"><%= registerError.mbasError %></label></form>
+                <form class="foop" action="/managefoodpage" method = "POST"><input type="submit" value="Manage Food" id="manageFood" class="u-full-width"><label id="manageFoodError" class="errors"><%= registerError.manageFoodError %></label></form>
+            </div>
+        </div>
+    </div>
+    <label id="usernameLabel" class="hideThese"><%=usernameValue%></label>
+    <script>
+        let userLabel = document.getElementById("usernameLabel");
+        let explore = document.getElementById("explore");
+        let viewOrderHistory = document.getElementById("viewOrderHistory");
+        let viewCurrentInformation = document.getElementById("viewCurrentInformation");
+        let manageFoodTrucks = document.getElementById("manageFoodTrucks");
+        let viewFoodTruckSummary = document.getElementById("viewFoodTruckSummary");
+        let manageBuildingAndStation = document.getElementById("manageBuildingAndStation");
+        let manageFood = document.getElementById("manageFood");
+        let mbasForm = document.getElementById("mbasForm");
+        
+        const username = userLabel.innerHTML; //this is so we know which user is currently on the page
+
+        //this adds a hidden input to each form so the server can see who is asking for the page
+        let forms = document.querySelectorAll('.foop');
+        [...forms].forEach((val, index)=>{
+            let newInput = document.createElement("input"); //{type:"text", value: username, class:"hideThese"}
+            newInput.setAttribute('type', 'text');
+            newInput.setAttribute('value', username);
+            newInput.setAttribute('class', "hideThese");
+            newInput.setAttribute('name', 'currentUser');
+            val.appendChild(newInput);
+        })
+        
+
+    </script>
+</body>
+</html>

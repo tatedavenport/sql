@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Foodtruck</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #outer {
+            margin-top:20rem;
+        }
+
+        .hideThese {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .error {
+            color:red;
+        }
+
+        .pushDown {
+            margin-top:3rem;
+        }
+
+        #filter {
+            margin-top: 7rem;
+        }
+
+        .radios {
+            margin-top: 1.8rem !important;
+        }
+
+        .buttonRow {
+            margin-top:4rem;
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        .menuItem {
+            border: 4px solid black;
+            border-radius:10px;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <h1>
+            Create Foodtruck
+        </h1>
+        <form method="POST" action="/createfoodtruck" id="form">
+            <div class="row">
+                <div class="twelve columns">
+                    <label for="foodTruckName">
+                        Name
+                    </label>
+                    <input type="text" name="foodTruckName" id="foodTruckName" required>
+                    <label class="error"><%=registerError.createFoodTruckError%></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="twelve columns">
+                    <label for="stationName">
+                        Station
+                    </label>
+                    <select name="stationName" id="stationName">
+                        <% stations.forEach((station)=>{ %>
+                            <option value="<%= station.stationName %>"><%= station.stationName %></option>
+                        <% }); %>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="twelve columns">
+                    <label for="assignedStaff">Assigned Staff</label>
+                    <!--insert checkbox inputs for each staff with ejs-->
+                    <% staff.forEach((staffMember)=>{ %>
+                        <label for="<%= staffMember.username %>">
+                            <%= staffMember.availableStaff %>
+                            <input value="<%= staffMember.username %>" id="<%= staffMember.username %>" type="checkbox" name="staffMembers[]">
+                        </label>
+                    <% }); %>
+                </div>
+            </div>
+            <div class="row buttonRow">
+                <div class="twelve columns">
+                    <label for="menuItem">Menu Item</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="six columns">
+                     <!--insert foodlist-->
+                     <label>Select food to add</label>
+                     <select name="foodSelect" id="foodSelect">
+                        <% foods.forEach((food)=>{ %>
+                            <option value="<%= food.foodName %>"><%= food.foodName %></option>
+
+                        <% }); %>
+                        <input type="button" id="addFood" value="Add Menu Item">
+                        <label>Price</label>
+                        <input type="number" step=".01" min=".01" id="price">
+                    </select>
+                </div>
+                <div class="six columns">
+                    <!--insert menu items here-->
+                    <ul id="menuItems">
+
+                    </ul>
+               </div>
+            </div>
+            <div class="row">
+                <div class="twelve columns buttonRow">
+                    <button>Create</button>
+                    <label id="ftError" class="error"></label>
+                </div>
+            </div>
+        </form>
+        <form method="POST" action="/managefoodtruckpage">
+            <div class="row buttonRow">
+                <div class="twelve columns">
+                    <button>Back</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <label id="usernameLabel" class="hideThese"><%=usernameValue%></label>
+    <script>
+        let form = document.getElementById("form");
+        let price = document.getElementById("price");
+        let userLabel = document.getElementById("usernameLabel");
+        let addFood = document.getElementById('addFood');
+        let menuItems = document.getElementById('menuItems');
+        let foodSelect = document.getElementById('foodSelect');
+        let ftError = document.getElementById('ftError');
+        const username = userLabel.innerHTML; //this is so we know which user is currently on the pagelet forms = document.querySelectorAll('.foop');
+        //adds user info to page
+        let forms = document.querySelectorAll('form');
+        [...forms].forEach((val, index)=>{
+            let newInput = document.createElement("input"); //{type:"text", value: username, class:"hideThese"}
+            newInput.setAttribute('type', 'text');
+            newInput.setAttribute('value', username);
+            newInput.setAttribute('class', "hideThese");
+            newInput.setAttribute('name', 'currentUser');
+            val.appendChild(newInput)
+        })
+
+        addFood.addEventListener('click', (e)=>{
+            let priceVal = price.value;
+            if (priceVal != "") {
+                let food = foodSelect.value;
+                //create new elements
+                let newListElement = document.createElement('li');
+                let foodLabel = document.createElement('label');
+                let priceLabel = document.createElement('label');
+                let foodName = document.createElement('input');
+                let priceInput = document.createElement('input');
+                let delButton = document.createElement('input');
+                //element attributes
+                foodLabel.innerHTML = "Food";
+                priceLabel.innerHTML = "Price";
+                foodName.setAttribute('type', 'text');
+                foodName.toggleAttribute('readonly');
+                foodName.setAttribute('name', 'foodName[]');
+                foodName.setAttribute('value', food);
+                priceInput.setAttribute('type', 'text');
+                priceInput.toggleAttribute('readonly');
+                priceInput.setAttribute('name', 'price[]');
+                priceInput.setAttribute('value', priceVal);
+                delButton.setAttribute('value', 'Delete');
+                delButton.setAttribute('type', 'button')
+                newListElement.setAttribute('class', 'menuItem')
+                //add children to li
+                newListElement.appendChild(foodLabel);
+                newListElement.appendChild(foodName);
+                newListElement.appendChild(priceLabel);
+                newListElement.appendChild(priceInput);
+                newListElement.appendChild(delButton);
+                //set delete event listener
+                delButton.addEventListener('click', (e)=>{
+                    let listElement = delButton.parentNode;
+                    let list = listElement.parentNode;
+                    let foodAdd;
+                    for (var i = 0; i < listElement.children.length; i++) {
+                        if (listElement.children[i].name==="foodName[]") {
+                            foodAdd = listElement.children[i].value;
+                        }
+                    }
+                    console.log(foodAdd);
+                    //add foodname back to dropdown
+                    let newOption = document.createElement('option');
+                    newOption.setAttribute('value', foodAdd);
+                    newOption.innerHTML = foodAdd;
+                    foodSelect.appendChild(newOption);
+                    list.removeChild(listElement);
+                    //add foodname back to dropdown
+                })
+                //append li to list
+                menuItems.appendChild(newListElement);
+                //remove food from select list
+                let options = document.querySelectorAll('option');
+                [...options].forEach((option, index)=>{
+                    if (option.value===food) {
+                        option.remove();
+                    }
+                });
+            }
+        })
+
+        form.addEventListener('submit', (e)=>{
+            //prevent default if no menu items or no staff
+            let hasMenuItems = false;
+            hasMenuItems = menuItems.children.length > 0;
+            let hasStaff = false;
+            let staffMembers = document.getElementsByName('staffMembers[]');
+            console.log(staffMembers);
+            for (var i = 0; i < staffMembers.length; i++) {
+                if (staffMembers[i].checked) {
+                    hasStaff=true;
+                }
+            }
+            console.log(hasStaff);
+            if (!hasMenuItems || !hasStaff) {
+                e.preventDefault();
+                //error
+                ftError.innerHTML = "Must have at least 1 staff and 1 menu item"
+            }
+        })
+    </script>
+</body>
+</html>

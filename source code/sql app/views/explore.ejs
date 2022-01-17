@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #outer {
+            margin-top:20rem;
+        }
+
+        .hideThese {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .error {
+            color:red;
+        }
+
+
+        .radios {
+            margin-top: 1.8rem !important;
+        }
+
+        #filter {
+            margin-top: 2.2rem;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <h1>Explore</h1>
+        <div class="row">
+            <div class="six columns">
+                <label for="buildingName">
+                    Building Name
+                    <select id="buildingName">
+                        <!--insert building names here-->
+                        <% buildings.forEach((building)=>{ %>
+                            <option value="<%= building.buildingName %>"><%= building.buildingName %></option>
+                        <% }); %>
+                        <option value=""></option>
+                    </select>
+                </label>
+            </div>
+            <div class="six columns">
+                <label for="stationName">
+                    Station Name
+                    <select id="stationName">
+                        <!--insert station names here-->
+                        <% stations.forEach((station)=>{ %>
+                            <option value="<%= station.stationName %>"><%= station.stationName %></option>
+                        <% }); %>
+                        <option value=""></option>
+                    </select>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="six columns">
+                <label for="tag">
+                    Building Tag (contain)
+                    <input type="text" id="tag">
+                </label>
+            </div>
+            <div class="six columns">
+                <label for="foodTruckName">
+                    Foodtruck Name (contain)
+                    <input type="text" id="foodTruckName">
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <label for="food">
+                    Food (contain)
+                    <input type="text" id="food">
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <input type="button" value="Filter" id="filter">
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <table id="table" class="u-full-width">
+                    <tr>
+                        <th>Station</th>
+                        <th>Building</th>
+                        <th>Foodtruck(s)</th>
+                        <th>Food(s)</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <input type="button" value="Select As Current Location" id="select">
+                <label id="selectError" class="error"></label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <form action="/home" method="POST">
+                    <input type="submit" value="Back">
+                </form>
+            </div>
+        </div>
+    </div>
+    <label id="usernameLabel" class="hideThese"><%=usernameValue%></label>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+        let userLabel = document.getElementById("usernameLabel");
+        let buildingName = document.getElementById("buildingName");
+        let stationName = document.getElementById("stationName");
+        let tag = document.getElementById("tag");
+        let food = document.getElementById("food");
+        let foodTruckName = document.getElementById("foodTruckName");
+        const username = userLabel.innerHTML; //this is so we know which user is currently on the page
+        const filter = document.getElementById('filter');
+        let forms = document.querySelectorAll('form');
+        let table = document.getElementById("table");
+        let selectError = document.getElementById("selectError");
+        let select = document.getElementById("select");
+        [...forms].forEach((val, index)=>{
+            let newInput = document.createElement("input"); 
+            newInput.setAttribute('type', 'text');
+            newInput.setAttribute('value', username);
+            newInput.setAttribute('class', "hideThese");
+            newInput.setAttribute('name', 'currentUser');
+            val.appendChild(newInput)
+        })
+
+        filter.addEventListener('click', (e)=>{
+            inputData = {
+                currentUser: username,
+                foodTruckName: foodTruckName.value,
+                food: food.value,
+                tag: tag.value,
+                buildingName: buildingName.value,
+                stationName: stationName.value
+            };
+            fetchOptions = {
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json"
+                },
+                body: JSON.stringify(inputData)
+            }
+            fetch('http://localhost:5000/explore', fetchOptions).then((response)=>response.json()).then((data)=>{
+               console.log(data);
+               updateTable(data);
+            });
+        })
+
+        function clearTable() {        
+            $("#table tr:gt(0)").remove(); 
+        }
+
+        function updateTable(data) {
+            clearTable();
+            data.forEach((element)=>{
+                //create new elements for table
+                let newRow = document.createElement("tr");
+                let station = document.createElement("td");
+                let building = document.createElement("td");
+                let foodtrucks = document.createElement("td");
+                let foods = document.createElement("td");
+                let radio = document.createElement("input");
+                radio.setAttribute("type", "radio");
+                radio.setAttribute("name", "stationSelect");
+                radio.setAttribute("class", "radios");
+                radio.setAttribute("value", element.stationName);
+
+                station.innerHTML = element.stationName;
+                building.innerHTML = element.buildingName;
+                foodtrucks.innerHTML = element.foodTruckNames;
+                foods.innerHTML = element.foodNames;
+
+
+                newRow.appendChild(station);
+                newRow.appendChild(building);
+                newRow.appendChild(foodtrucks);
+                newRow.appendChild(foods);
+                newRow.appendChild(radio);
+                table.appendChild(newRow);
+            });
+        }
+
+        select.addEventListener('click', e=>{
+            let radios = document.getElementsByName('stationSelect');
+            let isChecked = false;
+            let stationName;
+            //check if any buttons are selected, prevent
+            for (var i = 0, length = radios.length; i < length; i++) {
+                if (radios[i].checked) {
+                    isChecked = true;
+                    stationName = radios[i].value;
+                    break;
+                }
+            }
+            if (isChecked) {
+                //select new station
+                inputData = {
+                    currentUser: username,
+                    stationName, 
+                };
+                fetchOptions = {
+                    method: "POST",
+                    headers: {
+                    "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(inputData)
+                }
+                fetch('http://localhost:5000/selectstation', fetchOptions).then((response)=>response.json()).then((data)=>{
+                    console.log(data);
+                });
+            } else {
+                selectError.innerHTML = "You must select a station first";
+            }
+        })
+    </script>
+</body>
+</html>

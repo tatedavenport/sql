@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Building</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        
+        #descRow {
+            position: relative;
+        }
+
+        #back {
+            margin-top:4rem;
+            margin-bottom:4rem;
+        }
+
+        #createBuilding {
+            margin-top:4rem;
+        }
+
+        #outer {
+            margin-top:30rem;
+            border: 4px solid grey;
+            border-radius:16px;
+        }
+
+        h1 {
+            margin-top:4rem;
+        }
+
+        .hideThese {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        #buildingError {
+            color:red;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <h1>Update Building</h1>
+            <form action="/updatebuilding" method="POST" class="foop" id="updateform">
+            <div class="row">
+                <div class="six columns">
+                    <label>Name</label>
+                </div>
+                <div class="six columns">
+                    <input type="text" id="buildingName" name="buildingName" required value="<%= buildingName %>">
+                    <label id="buildingError"><%= registerError.updateBuildingError%></label>
+                </div>
+            </div>
+            <div class="row" id="descRow">
+                <div class="six columns">
+                    <label id="desc">Description</label>
+                </div>
+                <div class="six columns" id="list">
+                    <textarea id="description" name="description"><%= description %></textarea required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="six columns">
+                    <label>Tags</label>
+                </div>
+                <div class="six columns">
+                    <input type="text" id="tags" name="tags" placeholder="Enter tags as comma-separated values" required
+                    value="<%= tags %>">
+                </div>
+            </div>
+            <div class="row">
+                <div class="twelve columns">
+                    <button id="createBuilding">Update Building</button>
+                </div>
+            </div>
+            </form>
+            <form method="POST" action="/home" class="foop">
+                <div class="row">
+                    <div class="twelve columns">
+                        <button id="back">Back</button>
+                    </div>
+                </div>
+            </form>
+    </div>
+    <label id="usernameLabel" class="hideThese"><%=usernameValue%></label>
+    <script>
+        let userLabel = document.getElementById("usernameLabel");
+        const username = userLabel.innerHTML; //this is so we know which user is currently on the page
+        let buildingLabel = document.getElementById("buildingName");
+        const oldBuildingName = buildingLabel.value;
+        const oldDescription = document.getElementById("description").innerHTML;
+        const oldTags = document.getElementById("tags").value;
+        console.log(oldBuildingName);
+        console.log(oldDescription);
+        console.log(oldTags);
+        let forms = document.querySelectorAll('.foop');
+        //add user to form data
+        [...forms].forEach((val, index)=>{
+            let newInput = document.createElement("input");
+            newInput.setAttribute('type', 'text');
+            newInput.setAttribute('value', username);
+            newInput.setAttribute('class', "hideThese");
+            newInput.setAttribute('name', 'currentUser');
+            val.appendChild(newInput);
+        });
+
+        //add old building name, description, tags to form submission
+        let updateForm = document.getElementById("updateform");
+        updateForm.addEventListener('submit', (e)=>{
+            let newInput1 = document.createElement("input");
+            newInput1.setAttribute('type', 'text');
+            newInput1.setAttribute('value', oldBuildingName);
+            newInput1.setAttribute('class', "hideThese");
+            newInput1.setAttribute('name', 'oldBuildingName')
+            updateform.appendChild(newInput1);
+
+            let newInput2 = document.createElement("input");
+            newInput2.setAttribute('type', 'text');
+            newInput2.setAttribute('value', oldDescription);
+            newInput2.setAttribute('class', "hideThese");
+            newInput2.setAttribute('name', 'oldDescription')
+            updateform.appendChild(newInput2);
+
+            let newInput3 = document.createElement("input");
+            newInput3.setAttribute('type', 'text');
+            newInput3.setAttribute('value', oldTags);
+            newInput3.setAttribute('class', "hideThese");
+            newInput3.setAttribute('name', 'oldTags')
+            updateform.appendChild(newInput3);
+        })
+
+        //prevent browser back button
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.go(1);
+        }
+
+    </script>
+</body>
+</html>

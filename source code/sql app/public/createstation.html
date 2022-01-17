@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Station</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        #form1 {
+            display: inline-block;
+        }
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #backrow {
+            display:block;
+        }
+
+        #outer {
+            margin-top:35rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <h1>Create Station</h1>
+        <form id="form1">
+            <div class="row">
+                <div class="twelve columns">
+                    <label>Name</label>
+                    <input type="text" id="name" name="name" class="u-full-width">
+                </div>
+            </div>
+            <div class="row">
+                <div class="one-half column">
+                    <label>Capacity</label>
+                    <input type="number" id="number" name="number">
+                </div>
+                <div class="one-half column">
+                    <label>Sponsored Building</label>
+                    <select name="buildingName" id="buildingName">
+                        <!--insert available buildings here-->
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="twelve columns">
+                    <button id=createStation>Create Station</button>
+                </div> 
+            </div>
+        </form>
+        <form>
+            <div class="row" id="backrow">
+                <div class="twelve columns">
+                    <button id="back">Back</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

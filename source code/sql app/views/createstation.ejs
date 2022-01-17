@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Station</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        #form1 {
+            display: inline-block;
+        }
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #backrow {
+            display:block;
+        }
+
+        #outer {
+            margin-top:35rem;
+        }
+
+        .hideThese {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .error{
+            color:red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <h1>Create Station</h1>
+        <form id="form1" method="POST" action="/createstation">
+            <div class="row">
+                <div class="twelve columns">
+                    <label>Name</label>
+                    <input type="text" id="name" name="name" class="u-full-width" required>
+                    <label class="error"><%= registerError.createStationError %></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="one-half column">
+                    <label>Capacity</label>
+                    <input type="number" id="capacity" name="capacity" required min="1">
+                </div>
+                <div class="one-half column">
+                    <label>Sponsored Building</label>
+                    <select name="buildingName" id="buildingName">
+                        <% buildings.forEach((building)=>{ %>
+                            <option value="<%= building %>"><%= building %></option>
+                        <% }); %>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="twelve columns">
+                    <button id=createStation>Create Station</button>
+                </div> 
+            </div>
+        </form>
+        <form method="POST" action="/home">
+            <div class="row" id="backrow">
+                <div class="twelve columns">
+                    <button id="back">Back</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <label id="usernameLabel" class="hideThese"><%=usernameValue%></label>
+    <script>
+        //saves passed username value and adds a hidden input for the value, this should happen whenever the page loads
+        let userLabel = document.getElementById("usernameLabel");
+        const username = userLabel.innerHTML; //this is so we know which user is currently on the pagelet forms = document.querySelectorAll('.foop');
+        console.log(username);
+        let forms = document.querySelectorAll('form');
+        console.log(forms);
+        [...forms].forEach((val, index)=>{
+            let newInput = document.createElement("input");
+            newInput.setAttribute('type', 'text');
+            newInput.setAttribute('value', username);
+            newInput.setAttribute('class', "hideThese");
+            newInput.setAttribute('name', 'currentUser');
+            val.appendChild(newInput)
+        })
+
+
+    </script>
+</body>
+</html>

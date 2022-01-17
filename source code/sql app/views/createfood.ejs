@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Food</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #outer {
+            margin-top:35rem;
+        }
+
+        .hideThese {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .error {
+            color:red;
+        }
+
+        #buttonRow {
+            margin-top:4rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <h1>Create Food</h1>
+        <form method="POST" action="/createfood">
+            <div class="row">
+                <div class="twelve columns">
+                    <label>Name</label>
+                    <input type="text" name="foodName" id="foodName" required>
+                    <label class="error"><%= registerError.createFoodError%></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="twelve columns">
+                    <button>Create</button>
+                </div>
+            </div>
+        </form>
+        <form method="POST" action="/managefoodpage">
+            <div class="row" id="buttonRow">
+                <div class="twelve columns">
+                    <button>Back</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <label id="usernameLabel" class="hideThese"><%=usernameValue%></label>
+    <script>
+        let userLabel = document.getElementById("usernameLabel");
+        const username = userLabel.innerHTML; //this is so we know which user is currently on the pagelet forms = document.querySelectorAll('.foop');
+        //adds user info to page
+        let forms = document.querySelectorAll('form');
+        [...forms].forEach((val, index)=>{
+            let newInput = document.createElement("input"); //{type:"text", value: username, class:"hideThese"}
+            newInput.setAttribute('type', 'text');
+            newInput.setAttribute('value', username);
+            newInput.setAttribute('class', "hideThese");
+            newInput.setAttribute('name', 'currentUser');
+            val.appendChild(newInput)
+        })
+    </script>
+</body>
+</html>

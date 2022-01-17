@@ -1,0 +1,48 @@
+//for updating station
+app.post('/updatestationpage', (req, res)=>{
+    console.log(req.body);
+    //get the station corresponding to this building
+    //if none, then return to manage building and station page
+    if (Array.isArray(req.body.buildingName)) {
+        req.body.buildingName = req.body.buildingName[req.body.buildingName.length-1];
+    }
+    connection.query('select stationName, capacity from station where buildingName="' + req.body.buildingName + '";', (e, results, fields)=>{
+        if (e) {
+            console.log(e);
+        } else {
+            let hasStation = false;
+            if (results.length !== 0) {
+                hasStation = true;
+            }
+            if (!hasStation) {
+                connection.query('select buildingName from building', (e1, buildings, buildingFields)=>{
+                    connection.query('select stationName from station', (e2, stations, stationFields)=>{
+                        data = {};
+                        data.buildings = buildings;
+                        data.stations = stations;
+                        data.usernameValue = req.body.currentUser;
+                        res.render('managebuildingandstation', data); // gonna have to add in building and stations
+                    })
+                })
+            } else {
+                connection.query(`call ad_get_available_building()`, (e, results2, fields2)=>{
+                    connection.query('select * from ad_get_available_building_result', (e, results3, fields3)=>{
+                        buildings = [];
+                        results3.forEach(element=>{
+                            buildings.push(element.buildingName);
+                        });
+                        buildings.push(req.body.buildingName);
+                        resetRegisterError();
+                        let stationName = results[0].stationName;
+                        let capacity = results[0].capacity;
+                        req.body.stationName = stationName;
+                        req.body.capacity = capacity;
+                        req.body.usernameValue = req.body.currentUser;
+                        req.body.registerError = registerError;
+                        res.render('updatestation', req.body)
+                    })
+                })
+            }
+        }
+    })
+})

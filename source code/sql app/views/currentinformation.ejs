@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Information</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #outer {
+            margin-top:20rem;
+        }
+
+        .hideThese {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .error {
+            color:red;
+        }
+
+
+        .radios {
+            margin-top: 1.8rem !important;
+        }
+
+        #filter {
+            margin-top: 2.2rem;
+        }
+
+        label {
+            display: inline;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <h1>Current Information</h1>
+        <div class="row">
+            <label>Station
+                <label>
+                    <strong><u> <%=basicResults.stationName%></u></strong>
+                </label>
+            </label>
+        </div>
+        <div class="row">
+            <label>Building
+                <label>
+                    <strong><u> <%=basicResults.buildingName%></u></strong>
+                </label>
+            </label>
+        </div>
+        <div class="row">
+            <label>Building Tags
+                <label>
+                    <strong><u> <%=basicResults.tags%></u></strong>
+                </label>
+            </label>
+        </div>
+        <div class="row">
+            <label>Building Description
+                <label>
+                    <strong><u> <%=basicResults.description%></u></strong>
+                </label>
+            </label>
+        </div>
+        <div class="row">
+            <label>Balance
+                <label>
+                    <strong><u> <%=basicResults.balance%></u></strong>
+                </label>
+            </label>
+        </div>
+        <div class="row">
+            <form action="/orderpage" method="POST" id="form">
+                <table class="u-full-width">
+                    <tr>
+                        <th>Food Truck</th>
+                        <th>Manager</th>
+                        <th>Food(s)</th>
+                    </tr>
+                    <% tableResults.forEach((result)=>{ %>
+                        <tr>
+                            <td><%=result.foodTruckName%></td>
+                            <td><%=result.managerName%></td>
+                            <td><%=result.foodNames%></td>
+                            <td><input type="radio" value="<%=result.foodTruckName%>" name="foodTruckName"></td>
+                        </tr>
+                    <% }); %>
+                </table>
+                <button>Order</button>
+            </form>
+        </div>
+        <div class="row">
+            <form action="/home" method="POST">
+                <button>Back</button>
+            </form>
+        </div>
+    </div>
+    <label id="usernameLabel" class="hideThese"><%=usernameValue%></label>
+    <script>
+        let userLabel = document.getElementById("usernameLabel");
+        const username = userLabel.innerHTML; //this is so we know which user is currently on the page
+        let forms = document.querySelectorAll('form');
+        let form = document.getElementById('form');
+        [...forms].forEach((val, index)=>{
+            let newInput = document.createElement("input"); 
+            newInput.setAttribute('type', 'text');
+            newInput.setAttribute('value', username);
+            newInput.setAttribute('class', "hideThese");
+            newInput.setAttribute('name', 'currentUser');
+            val.appendChild(newInput)
+        })
+
+        form.addEventListener('submit', e=>{
+            let radios = document.getElementsByName('foodTruckName');
+            let isChecked = false;
+            let foodTruckName;
+            //check if any buttons are selected, prevent
+            for (var i = 0, length = radios.length; i < length; i++) {
+                if (radios[i].checked) {
+                    isChecked = true;
+                    foodTruckName = radios[i].value;
+                    break;
+                }
+            }
+            if (!isChecked) {
+                e.preventDefault();
+                //maybe add a "must select" error message
+            }
+        })
+    </script>
+</body>
+</html>

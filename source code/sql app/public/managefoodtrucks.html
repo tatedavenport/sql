@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Food Trucks</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #outer {
+            margin-top:35rem;
+        }
+
+        .hideThese {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .error {
+            color:red;
+        }
+
+        form {
+            display: inline-block;
+        }
+
+        .pushDown {
+            margin-top:3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" #outer>
+        <h1>Mange Food Trucks</h1>
+        <div class="row">
+            <div class="six columns">
+                <label for="foodTruckName">Food Truck Name</label>
+                <input type="text" id="foodTruckName" name="foodTruckName">
+            </div>
+            <div class="six columns">
+                <label for="stationName">Station Name</label>
+                <select name="stationName" id="stationName">
+                    <!--insert station names here with ejs-->
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="four columns">
+                <label>Staff Count</label>
+                <input type="number" name="staffCountLow">
+                <strong>-</strong>
+                <input type="number" name="staffCountHigh">
+            </div>
+            <div class="four columns">
+                <label class="pushDown">Has Remaining Capacity</label>
+                <input type="checkbox" name="hasRemainingCapacity" class="pushDown">
+            </div>
+            <div class="four columns">
+                <input type="button" id="filter" value="filter" class="pushDown">
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <table class="u-full-width">
+                    <tr>
+                        <th>Food Truck Name</th>
+                        <th>Station Name</th>
+                        <th>Remaining Capacity</th>
+                        <th>Staff Count</th>
+                        <th>Menu Item Count</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="three columns">
+                <form action="/createfoodtruckpage" method="POST">
+                    <button>Create</button>
+                </form>
+            </div>
+            <div class="three columns">
+                <form action="/updatefoodtruckpage" method="POST">
+                    <button>Update</button>
+                </form>
+            </div>
+            <div class="three columns">
+                <form action="/deletefoodtruck" method="POST">
+                    <button>Delete</button>
+                </form>
+            </div>
+            <div class="three columns">
+                <form method="POST" action="/home">
+                    <button>Back</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        let filter = document.getElementById("filter");
+
+    </script>
+</body>
+</html>

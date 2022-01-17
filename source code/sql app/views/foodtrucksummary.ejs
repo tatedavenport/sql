@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foodtruck Summary</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #outer {
+            margin-top:20rem;
+        }
+
+        .hideThese {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .error {
+            color:red;
+        }
+
+
+        .radios {
+            margin-top: 1.8rem !important;
+        }
+
+        #filter {
+            margin-top: 2.2rem;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <h1>Foodtruck Summary</h1>
+        <div class="row">
+            <div class="six columns">
+                <label for="foodTruckName">Foodtruck Name (contains)
+                    <input type="text" id="foodTruckName">
+                </label>
+            </div>
+            <div class="six columns">
+                <label for="stationName">Station name
+                    <select name="stationName" id="stationName">
+                        <!--insert station names with ejs (only ones managed by manager)-->
+                        <% stations.forEach((station)=>{ %>
+                            <option value="<%= station.stationName %>"><%= station.stationName %></option>
+                        <% }); %>
+                    </select>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="six columns">
+                <label for="startDate">Start Date
+                    <input type="date" id="startDate">
+                </label>
+            </div>
+            <div class="six columns">
+                <label for="endDate">End Date
+                    <input type="date" id="endDate">
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="four columns">
+                <label>Sort By</label>
+                <select name="sortDir" id="sortDir">
+                    <option value="ASC">ASC</option>
+                    <option value="DESC">DESC</option>
+                </select>
+            </div>
+            <div class="four columns">
+                <input type="button" id="filter" value="filter">
+            </div>
+            <div class="four columns">
+                <label>Sort Direction</label>
+                <select name="sortBy" id="sortBy">
+                    <option value="foodTruckName">foodTruckName</option>
+                    <option value="totalOrder">totalOrder</option>
+                    <option value="totalRevenue">totalRevenue</option>
+                    <option value="totalCustomer">totalCustomer</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <table id="table" class="u-full-width">
+                    <tr>
+                        <th>Food Truck Name</th>
+                        <th># Total Order</th>
+                        <th>Total Revenue</th> 
+                        <th># Customer</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <form method="POST" action="/viewdetailpage" id="detailform">
+                    <input type="submit" value="View Detail" id="viewDetail">
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <form method="POST" action="/home">
+                    <input type="submit" value="Back" id="back">
+                </form>
+            </div>
+        </div>
+    </div>
+    <label id="usernameLabel" class="hideThese"><%=usernameValue%></label>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+        const filter = document.getElementById('filter');
+        const sortDir = document.getElementById('sortDir');
+        const sortBy = document.getElementById('sortBy');
+        const userLabel = document.getElementById("usernameLabel");
+        const foodTruckElement = document.getElementById('foodTruckName');
+        const stationElement = document.getElementById('stationName');
+        const startDate = document.getElementById('startDate');
+        const endDate = document.getElementById('endDate');
+        const table = document.getElementById('table');
+        const username = userLabel.innerHTML; //this is so we know which user is currently on the pagelet forms = document.querySelectorAll('.foop');
+        const detailform = document.getElementById('detailform');
+        //adds user info to page
+        let forms = document.querySelectorAll('form');
+        [...forms].forEach((val, index)=>{
+            let newInput = document.createElement("input");
+            newInput.setAttribute('type', 'text');
+            newInput.setAttribute('value', username);
+            newInput.setAttribute('class', "hideThese");
+            newInput.setAttribute('name', 'currentUser');
+            val.appendChild(newInput)
+        })
+
+        filter.addEventListener('click', (e)=>{
+            inputData = {
+                sortedDir: sortDir.value,
+                sortedBy: sortBy.value,
+                firstDate: startDate.value,
+                lastDate: endDate.value,
+                foodTruckName: foodTruckElement.value,
+                stationName: stationElement.value,
+                currentUser: username
+            };
+            fetchOptions = {
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json"
+                },
+                body: JSON.stringify(inputData)
+            }
+            fetch('http://localhost:5000/foodtrucksummary', fetchOptions).then((response)=>response.json()).then((data)=>{
+               console.log(data);
+               updateTable(data);
+            });
+        })
+
+        function clearTable() {        
+            $("#table tr:gt(0)").remove(); 
+        }
+
+        function updateTable(data) {
+            //remove old elements first
+            clearTable();
+            data.forEach((element)=>{
+                //create new elements for table
+                let newRow = document.createElement("tr");
+                let foodTruckName = document.createElement("td");
+                let totalOrder = document.createElement("td");
+                let totalRevenue = document.createElement("td");
+                let numCustomer = document.createElement("td");
+                let radio = document.createElement("input");
+                radio.setAttribute("type", "radio");
+                radio.setAttribute("name", "foodTruckSelect");
+                radio.setAttribute("class", "radios");
+                radio.setAttribute("value", element.foodTruckName);
+
+                foodTruckName.innerHTML = element.foodTruckName;
+                totalOrder.innerHTML = element.totalOrder;
+                totalRevenue.innerHTML = element.totalRevenue;
+                numCustomer.innerHTML = element.totalCustomer;
+
+
+                newRow.appendChild(foodTruckName);
+                newRow.appendChild(totalOrder);
+                newRow.appendChild(totalRevenue);
+                newRow.appendChild(numCustomer);
+                newRow.appendChild(radio);
+                table.appendChild(newRow);
+            });
+        }
+
+        detailform.addEventListener('submit', (e)=>{
+            let radios = document.getElementsByName('foodTruckSelect');
+            let isChecked = false;
+            let foodTruckName;
+            //check if any buttons are selected, prevent
+            for (var i = 0, length = radios.length; i < length; i++) {
+                if (radios[i].checked) {
+                    isChecked = true;
+                    foodTruckName = radios[i].value;
+                    break;
+                }
+            }
+            console.log(isChecked);
+            let newInput = document.createElement("input");
+            newInput.setAttribute('type', 'text');
+            newInput.setAttribute('value', foodTruckName);
+            newInput.setAttribute('class', "hideThese");
+            newInput.setAttribute('name', 'foodTruckName');
+            if (!isChecked) {
+                e.preventDefault();
+            } else {
+                detailform.appendChild(newInput)
+            }
+        });
+
+    </script>
+</body>
+</html>

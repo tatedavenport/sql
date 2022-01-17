@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #outer {
+            margin-top:35rem;
+        }
+
+        form {
+            display: inline-block;
+        }
+
+        .hideThese {
+            visibility: hidden;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form method="POST" action="/createfood">
+            <div class="row">
+                <div class="six columns">
+                    <label>Name</label>
+                </div>
+                <div class="six columns">
+                    <input type="text" name="foodName" id="foodName">
+                </div>
+            </div>
+            <div class="row">
+                <div class="twelve columns">
+                    <button>Create</button>
+                </div>
+            </div>
+        </form>
+        <form method="POST" action="/home">
+            <div class="row">
+                <div class="twelve columns">
+                    <button>Back</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <label id="usernameLabel" class="hideThese"><%=usernameValue%></label>
+    <script>
+        let userLabel = document.getElementById("usernameLabel");
+        const username = userLabel.innerHTML; //this is so we know which user is currently on the pagelet forms = document.querySelectorAll('.foop');
+        //adds user info to page
+        let forms = document.querySelectorAll('form');
+        [...forms].forEach((val, index)=>{
+            let newInput = document.createElement("input"); //{type:"text", value: username, class:"hideThese"}
+            newInput.setAttribute('type', 'text');
+            newInput.setAttribute('value', username);
+            newInput.setAttribute('class', "hideThese");
+            newInput.setAttribute('name', 'currentUser');
+            val.appendChild(newInput)
+        })
+    </script>
+</body>
+</html>

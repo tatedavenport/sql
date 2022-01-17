@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Information</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #outer {
+            margin-top:20rem;
+        }
+
+        .hideThese {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .error {
+            color:red;
+        }
+
+
+        .radios {
+            margin-top: 1.8rem !important;
+        }
+
+        #filter {
+            margin-top: 2.2rem;
+        }
+
+        label {
+            display: inline;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <h1>Current Information</h1>
+        <div class="row">
+            <label>Station
+                <label>
+                    <strong><u> <!--insert station name--></u></strong>
+                </label>
+            </label>
+        </div>
+        <div class="row">
+            <label>Building
+                <label>
+                    <strong><u> <!--insert building name--></u></strong>
+                </label>
+            </label>
+        </div>
+        <div class="row">
+            <label>Building Tags
+                <label>
+                    <strong><u> <!--insert building tags--></u></strong>
+                </label>
+            </label>
+        </div>
+        <div class="row">
+            <label>Building Description
+                <label>
+                    <strong><u> <!--insert building description--></u></strong>
+                </label>
+            </label>
+        </div>
+        <div class="row">
+            <label>Balance
+                <label>
+                    <strong><u> <!--insert balance--></u></strong>
+                </label>
+            </label>
+        </div>
+        <div class="row">
+            <table class="u-full-width">
+                <tr>
+                    <th>Food Truck</th>
+                    <th>Manager</th>
+                    <th>Food(s)</th>
+                </tr>
+            </table>
+        </div>
+        <div class="row">
+            <form action="/orderpage" method="POST">
+                <button>Order</button>
+            </form>
+        </div>
+        <div class="row">
+            <form action="/home" method="POST">
+                <button>Back</button>
+            </form>
+        </div>
+    </div>
+    <script>
+
+    </script>
+</body>
+</html>

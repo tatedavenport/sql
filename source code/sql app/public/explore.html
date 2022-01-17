@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #outer {
+            margin-top:20rem;
+        }
+
+        .hideThese {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .error {
+            color:red;
+        }
+
+
+        .radios {
+            margin-top: 1.8rem !important;
+        }
+
+        #filter {
+            margin-top: 2.2rem;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <h1>Explore</h1>
+        <div class="row">
+            <div class="six columns">
+                <label for="buildingName">
+                    Building Name
+                    <select id="buildingName">
+                        <!--insert building names here-->
+                    </select>
+                </label>
+            </div>
+            <div class="six columns">
+                <label for="stationName">
+                    Station Name
+                    <select id="stationName">
+                        <!--insert station names here-->
+                    </select>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="six columns">
+                <label for="tag">
+                    Building Tag (contain)
+                    <input type="text" id="tag">
+                </label>
+            </div>
+            <div class="six columns">
+                <label for="foodTruckName">
+                    Foodtruck Name (contain)
+                    <input type="text" id="foodTruckName">
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <label for="food">
+                    Food (contain)
+                    <input type="text" id="food">
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <input type="button" value="Filter" id="filter">
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <table id="table" class="u-full-width">
+                    <tr>
+                        <th>Station</th>
+                        <th>Building</th>
+                        <th>Foodtruck(s)</th>
+                        <th>Food(s)</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <input type="button" value="Select As Current Location" id="select">
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <form action="/home" method="POST">
+                    <input type="submit" value="Back">
+                </form>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+
+    </script>
+</body>
+</html>

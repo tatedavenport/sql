@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foodtruck Summary</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #outer {
+            margin-top:20rem;
+        }
+
+        .hideThese {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .error {
+            color:red;
+        }
+
+
+        .radios {
+            margin-top: 1.8rem !important;
+        }
+
+        #filter {
+            margin-top: 2.2rem;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <h1>Foodtruck Summary</h1>
+        <div class="row">
+            <div class="six columns">
+                <label for="foodTruckName">Foodtruck Name (contains)
+                    <input type="text" id="foodTruckName">
+                </label>
+            </div>
+            <div class="six columns">
+                <label for="stationName">Station name
+                    <select name="stationName" id="stationName">
+                        <!--insert station names with ejs (only ones managed by manager)-->
+                    </select>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="six columns">
+                <label for="startDate">Start Date
+                    <input type="date" id="startDate">
+                </label>
+            </div>
+            <div class="six columns">
+                <label for="endDate">End Date
+                    <input type="date" id="endDate">
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="four columns">
+                <label>Sort By</label>
+                <select name="sortBy" id="sortBy">
+                    <!--insert options to sort by(not with ejs, just lazy right now)-->
+                </select>
+            </div>
+            <div class="four columns">
+                <input type="button" id="filter" value="filter">
+            </div>
+            <div class="four columns">
+                <label>Sort Direction</label>
+                <select name="sortDir" id="sortDir">
+                    <!--insert options to sort by(not with ejs, just lazy right now)-->
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <table id="table" class="u-full-width">
+                    <tr>
+                        <th>Food Truck Name</th>
+                        <th># Total Order</th>
+                        <th>Total Revenue</th> 
+                        <th># Customer</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <form method="POST" action="/viewdetailpage">
+                    <input type="button" value="View Detail" id="viewDetail">
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <form method="POST" action="/home">
+                    <input type="submit" value="Back" id="back">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

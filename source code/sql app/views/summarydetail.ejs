@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summary Detail</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #outer {
+            margin-top:20rem;
+        }
+
+        .hideThese {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .error {
+            color:red;
+        }
+
+
+        .radios {
+            margin-top: 1.8rem !important;
+        }
+
+        #filter {
+            margin-top: 2.2rem;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <h1>Summary Detail</h1>
+        <div class="row">
+            <div class="twelve columns">
+                <label>Food Truck Name:</label>
+                <label><!--insert foodtruck name with ejs--></label>
+            </div>
+        </div>
+        <div class="row">
+            <table class="u-full-width">
+                <tr>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th>Total Purchase</th>
+                    <th># Orders</th>
+                    <th>Food(s)</th>
+                </tr>
+                <!--insert table results with ejs-->
+                <% results2.forEach((result)=>{ %>
+                    <tr>
+                        <td>
+                            <%=result.date%>
+                        </td>
+                        <td>
+                            <%=result.customerName%>
+                        </td>
+                        <td>
+                            <%=result.totalPurchase%>
+                        </td>
+                        <td>
+                            <%=result.orderCount%>
+                        </td>
+                        <td>
+                            <%=result.foodNames%>
+                        </td>
+                    </tr>
+                <% }); %>
+            </table>
+        </div>
+        <div class="row">
+            <form action="/foodtrucksummarypage" method="POST">
+                <button>Back</button>
+            </form>
+        </div>
+    </div>
+    <label id="usernameLabel" class="hideThese"><%=usernameValue%></label>
+    <script>
+        const userLabel = document.getElementById("usernameLabel");
+        const username = userLabel.innerHTML;
+        let forms = document.querySelectorAll('form');
+        [...forms].forEach((val, index)=>{
+            let newInput = document.createElement("input");
+            newInput.setAttribute('type', 'text');
+            newInput.setAttribute('value', username);
+            newInput.setAttribute('class', "hideThese");
+            newInput.setAttribute('name', 'currentUser');
+            val.appendChild(newInput)
+        })
+    </script>
+</body>
+</html>

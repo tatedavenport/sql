@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Building and Station</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+            overflow:hidden;
+        }
+
+        #capacity2 {
+            margin-left: 5px;
+        }
+
+        #capacity1 {
+            margin-right: 5px;
+        }
+
+        #filterRow {
+            margin-top: 10px;
+        }
+
+        #tableRow {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <h1 class=>Manage Building and Station</h1> 
+        <div class="row">
+            <div class="six columns">
+                <label for="buildingName">Building Name</label>
+                <select name="buildingName" id="buildingName">
+                <!--this is where to insert the building names with ejs-->
+                </select>
+            </div>
+            <div class="six columns">
+                <label for="buildingTag">Building Tags</label>
+                <input name="buildingTag" id="buildingTag" type="text">
+            </div>
+        </div>
+        <div class="row">
+            <div class="six columns">
+                <label for="stationName">Station Name</label>
+                <select name="stationName" id="stationName">
+                <!--this is where to insert the station names with ejs-->
+                </select>
+            </div>
+            <div class="six columns">
+                <label for="capacity1">Capacity</label>
+                <input name="capacity1" id="capacity1" type="number">
+                <strong> - </strong>
+                <input name="capacity2" id="capacity2" type="number">
+            </div>
+        </div>
+        <div class="row" id="filterRow">
+            <input type="button" value="Filter" id="filter">
+        </div>
+        <div class="row" id="tableRow">
+            <table id="table">
+
+            </table>
+        </div>
+    </div>
+    <script>
+        
+    </script>
+</body>
+</html>

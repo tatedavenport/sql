@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Food</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #outer {
+            margin-top:35rem;
+        }
+
+        form {
+            display: inline-block;
+        }
+
+        .hideThese {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .error {
+            color:red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <h1>Manage Food</h1>
+        <div class="row">
+            <div class="six columns">
+                <label>Name</label>
+                <select name="foodName" id="foodName">
+                    <% foods.forEach((food)=>{ %>
+                        <option value="<%= food.foodName %>" name="foodDropdown"><%= food.foodName %></option>
+                    <% }); %>
+                        <option value=""></option>
+                </select>
+            </div>
+            <div class="six columns">
+                <button id="filter">Filter</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="six columns">
+                <label>Sort Direction
+                    <select name="sortDir" id="sortDir">
+                        <option value="ASC">ASC</option>
+                        <option value="DESC">DESC</option>
+                    </select>
+                </label>
+            </div>
+            <div class="six columns">
+                <label>Sort By
+                    <select name="sortName" id="sortName">
+                        <option value="name">name</option>
+                        <option value="menuCount">menuCount</option>
+                        <option value="purchaseCount">purchaseCount</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <table class="u-full-width" id="myTable">
+                    <tr>
+                        <th>Name</th>
+                        <th>Menu Count</th>
+                        <th>Purchase Count</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="four columns">
+                <form action='/home' method="POST">
+                    <button>Back</button>
+                </form>
+            </div>
+            <div class="four columns">
+                <button id="deleteButton">Delete</button>
+                <label class="error" id="deleteError"></label>
+            </div>
+            <div class="four columns">
+                <form action="/createfoodpage" method="POST">
+                    <button>Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <label id="usernameLabel" class="hideThese"><%=usernameValue%></label>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+        let userLabel = document.getElementById("usernameLabel");
+        const username = userLabel.innerHTML; //this is so we know which user is currently on the pagelet forms = document.querySelectorAll('.foop');
+        const foodName = document.getElementById("foodName");
+        const filter = document.getElementById("filter");
+        const table = document.getElementById('myTable');
+        const deleteButton = document.getElementById('deleteButton');
+        const deleteForm = document.getElementById('deleteForm');
+        const deleteError = document.getElementById('deleteError');
+        const sortName = document.getElementById('sortName');
+        const sortDir = document.getElementById('sortDir');
+
+        filter.addEventListener('click',(e)=>{
+            clearTable();
+            inputData = {
+                foodName: foodName.value,
+                sortDir:sortDir.value, 
+                sortName: sortName.value,
+                currentUser: username
+            }
+            fetchOptions = {
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json"
+                },
+                body: JSON.stringify(inputData)
+            }
+            fetch("http://localhost:5000/managefood", fetchOptions).then((response)=>response.json()).then((data)=>{
+                console.log(data);
+                updateTable(data);
+            })
+        })
+
+        //adds user info to page
+        let forms = document.querySelectorAll('form');
+        [...forms].forEach((val, index)=>{
+            let newInput = document.createElement("input"); //{type:"text", value: username, class:"hideThese"}
+            newInput.setAttribute('type', 'text');
+            newInput.setAttribute('value', username);
+            newInput.setAttribute('class', "hideThese");
+            newInput.setAttribute('name', 'currentUser');
+            val.appendChild(newInput)
+        })
+
+        function clearTable() {        
+            $("#myTable tr:gt(0)").remove(); 
+        }
+
+        function updateTable(data) {
+            //remove old elements first
+            clearTable(); //not sure if this works yet
+            data.forEach((element)=>{
+                //create new elements for table
+                let newRow = document.createElement("tr");
+                let foodName = document.createElement("td");
+                let menuCount = document.createElement("td");
+                let purchaseCount = document.createElement("td");
+                let radio = document.createElement("input");
+                radio.setAttribute("type", "radio");
+                radio.setAttribute("name", "foodSelect");
+                radio.setAttribute("class", "radios");
+                radio.setAttribute("value", element.foodName);
+                foodName.setAttribute('name', 'foodName');
+
+                foodName.innerHTML = element.foodName;
+                menuCount.innerHTML = element.menuCount;
+                purchaseCount.innerHTML = element.purchaseCount;
+
+                newRow.appendChild(foodName);
+                newRow.appendChild(menuCount);
+                newRow.appendChild(purchaseCount);
+                newRow.appendChild(radio);
+                table.appendChild(newRow);
+            });
+        }
+        
+        deleteButton.addEventListener('click', (e)=>{
+            let radios = document.getElementsByClassName("radios");
+            let isChecked = false;
+            let foodName;
+            for(var i = 0; i < radios.length; i++){
+                if(radios[i].checked){
+                    isChecked = true;
+                    foodName = radios[i].value;
+                }
+            }
+            if (isChecked) {
+                inputData = {currentUser:username, foodName};
+                fetchOptions = {
+                    method: "POST",
+                    headers: {
+                    "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(inputData)
+                }
+                fetch('http://localhost:5000/deletefood', fetchOptions).then((response)=>response.json()).then((data)=>{
+                    if(data.response !== "OK") {
+                        //create error message
+                        deleteError.innerHTML = "Can't delete that food"
+                    } else {
+                        //delete food from list
+                        let foodDropdowns = document.getElementsByName('foodDropdown');
+                        for (var i = 0; i < foodDropdowns.length; i++) {
+                            if (foodDropdowns[i].innerHTML === data.foodName) {   
+                                foodDropdowns[i].parentNode.removeChild(foodDropdowns[i]);
+                            }
+                        }
+                        //delete from table
+                        let foodNames = document.getElementsByName('foodName');
+                        for (var i = 0; i < foodNames.length; i++) {
+                            if (foodNames[i].innerHTML === data.foodName) {
+                                foodNames[i].parentNode.parentNode.removeChild(foodNames[i].parentNode);
+                            }
+                        }
+                    }
+                });
+            }
+        })
+    </script>
+</body>
+</html>

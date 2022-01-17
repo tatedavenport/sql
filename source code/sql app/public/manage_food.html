@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Food</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #outer {
+            margin-top:35rem;
+        }
+
+        form {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <h1>Manage Food</h1>
+        <div class="row">
+            <div class="six columns">
+                <label>Name</label>
+                <select name="foodName">
+
+                </select>
+            </div>
+            <div class="six columns">
+                <button>Filter</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <table class="u-full-width">
+                    <tr>
+                        <th>Name</th>
+                        <th>Menu Count</th>
+                        <th>Purchase Count</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="four columns">
+                <form action='/home' method="POST">
+                    <button>Back</button>
+                </form>
+            </div>
+            <div class="four columns">
+                <button>Delete</button>
+            </div>
+            <div class="four columns">
+                <button>Create</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

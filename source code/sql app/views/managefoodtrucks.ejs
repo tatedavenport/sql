@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Food Trucks</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #outer {
+            margin-top:20rem;
+        }
+
+        .hideThese {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .error {
+            color:red;
+        }
+
+        form {
+            display: inline-block;
+        }
+
+        .pushDown {
+            margin-top:3rem;
+        }
+
+        #filter {
+            margin-top: 7rem;
+        }
+
+        .radios {
+            margin-top: 1.8rem !important;
+        }
+        
+
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <h1>Manage Food Trucks</h1>
+        <div class="row">
+            <div class="six columns">
+                <label for="foodTruckName">Food Truck Name</label>
+                <input type="text" id="foodTruckName" name="foodTruckName">
+            </div>
+            <div class="six columns">
+                <label for="stationName">Station Name</label>
+                <select name="stationName" id="stationName">
+                    <!--insert station names here with ejs-->
+                    <% stations.forEach((station)=>{ %>
+                        <option value="<%= station.stationName %>"><%= station.stationName %></option>
+                    <% }); %>
+                        <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="four columns">
+                <label>Staff Count</label>
+                <input type="number" name="staffCount1" id="staffCount1">
+                <strong>-</strong>
+                <input type="number" name="staffCount2" id="staffCount2">
+            </div>
+            <div class="four columns">
+                <label class="pushDown">Has Remaining Capacity</label>
+                <input type="checkbox" name="hasRemainingCapacity" class="pushDown" id="hasRemainingCapacity">
+            </div>
+            <div class="four columns">
+                <input type="button" id="filter" value="filter" class="pushDown">
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <table class="u-full-width" id="table">
+                    <tr>
+                        <th>Food Truck Name</th>
+                        <th>Station Name</th>
+                        <th>Remaining Capacity</th>
+                        <th>Staff Count</th>
+                        <th>Menu Item Count</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="four columns">
+                <form action="/createfoodtruckpage" method="POST">
+                    <button>Create</button>
+                </form>
+            </div>
+            <div class="four columns">
+                <input type="button" value="Delete" id="deletebutton">
+                <label id="deleteError" class="error"></label>
+            </div>
+            <div class="four columns">
+                <form method="POST" action="/home">
+                    <button>Back</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <label id="usernameLabel" class="hideThese"><%=usernameValue%></label>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+        let userLabel = document.getElementById("usernameLabel");
+        let foodTruckName = document.getElementById('foodTruckName');
+        let stationName = document.getElementById('stationName');
+        let staffCount1 = document.getElementById('staffCount1');
+        let staffCount2 = document.getElementById('staffCount2');
+        let hasRemainingCapacity = document.getElementById('hasRemainingCapacity');
+        let table = document.getElementById('table');
+        const deletebutton = document.getElementById("deletebutton");
+
+        const username = userLabel.innerHTML; //this is so we know which user is currently on the pagelet forms = document.querySelectorAll('.foop');
+        //adds user info to page
+        let forms = document.querySelectorAll('form');
+        [...forms].forEach((val, index)=>{
+            let newInput = document.createElement("input"); //{type:"text", value: username, class:"hideThese"}
+            newInput.setAttribute('type', 'text');
+            newInput.setAttribute('value', username);
+            newInput.setAttribute('class', "hideThese");
+            newInput.setAttribute('name', 'currentUser');
+            val.appendChild(newInput)
+        })
+
+        let filter = document.getElementById("filter");
+        filter.addEventListener('click', (e)=> {
+            inputData = {
+                foodTruckName: foodTruckName.value,
+                stationName: stationName.value,
+                staffCount1: staffCount1.value,
+                staffCount2: staffCount2.value,
+                hasRemainingCapacity: hasRemainingCapacity.checked,
+                username
+            }
+            fetchOptions = {
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json"
+                },
+                body: JSON.stringify(inputData)
+            }
+            fetch("http://localhost:5000/managefoodtruck", fetchOptions).then((response)=>response.json()).then((data)=>{
+                updateTable(data);
+            })
+        })
+
+        function clearTable() {        
+            $("#table tr:gt(0)").remove(); 
+        }
+
+        function updateTable(data) {
+            //remove old elements first
+            clearTable();
+            data.forEach((element)=>{
+                //create new elements for table
+                let newRow = document.createElement("tr");
+                let foodTruckName = document.createElement("td");
+                let menuCount = document.createElement("td");
+                let staffCount = document.createElement("td");
+                let stationName = document.createElement("td");
+                let remainingCapacity = document.createElement("td");
+                let radio = document.createElement("input");
+                radio.setAttribute("type", "radio");
+                radio.setAttribute("name", "foodTruckSelect");
+                radio.setAttribute("class", "radios");
+                radio.setAttribute("value", element.foodTruckName);
+
+                foodTruckName.innerHTML = element.foodTruckName;
+                menuCount.innerHTML = element.menuItemCount;
+                staffCount.innerHTML = element.staffCount;
+                stationName.innerHTML = element.stationName;
+                remainingCapacity.innerHTML = element.remainingCapacity;
+
+
+                newRow.appendChild(foodTruckName);
+                newRow.appendChild(stationName);
+                newRow.appendChild(remainingCapacity);
+                newRow.appendChild(staffCount);
+                newRow.appendChild(menuCount);
+                newRow.appendChild(radio);
+                table.appendChild(newRow);
+            });
+        }
+
+        deletebutton.addEventListener('click', e=>{
+            let radios = document.getElementsByName('foodTruckSelect');
+            let isChecked = false;
+            let foodTruckName;
+            //check if any buttons are selected, prevent
+            for (var i = 0, length = radios.length; i < length; i++) {
+                if (radios[i].checked) {
+                    isChecked = true;
+                    foodTruckName = radios[i].value;
+                    break;
+                }
+            }
+            if (isChecked) {
+                inputData = {
+                    currentUser: username,
+                    foodTruckName
+                }
+                fetchOptions = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(inputData)
+                }
+                fetch("http://localhost:5000/deletefoodtruck", fetchOptions).then((response)=>response.json()).then((data)=>{
+                    console.log(data);
+                    if (data.result==="Failure") {
+                        let deleteError = document.getElementById('deleteError');
+                        deleteError.innerHTML = "Can't delete a foodtruck with menu items";
+                    } else {
+                        //actually do the deletion, but i don't think this is necessary because you'll never be able to do it
+                    }
+                })
+            }
+        })
+
+    </script>
+</body>
+</html>

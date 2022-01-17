@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #outer {
+            margin-top:20rem;
+        }
+
+        .hideThese {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .error {
+            color:red;
+        }
+
+
+        .radios {
+            margin-top: 1.8rem !important;
+        }
+
+        #filter {
+            margin-top: 2.2rem;
+        }
+
+        label {
+            display: inline;
+        }
+
+        #firstRow {
+            margin-bottom: 5rem;
+            margin-top: 3rem;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <h1>Order</h1>
+        <div class="row" id="firstRow">
+            <label>Foodtruck
+                <label>
+                    <strong><u><!--foodtruckname--></u></strong>
+                </label>
+            </label>
+        </div>
+        <form method="POST" action="/orderpage">
+            <div class="row">
+                <table class="u-full-width">
+                    <tr>
+                        <th>Food</th>
+                        <th>Price</th>
+                        <th>Purchase Quantity</th>
+                    </tr>
+                    <!--insert menu items and a quantity input-->
+                </table>
+            </div>
+            <div class="row">
+                <label for="date">
+                    Date
+                    <input type="date" id="date" name="date">
+                </label>
+            </div>
+            <div class="row">
+                <button>Submit</button>
+            </div>
+        </form>
+        <div class="row">
+            <form method="POST" action="/currentinformation">
+                <button>Back</button>
+            </form>
+        </div>
+    </div>
+    <script>
+
+    </script>
+</body>
+</html>

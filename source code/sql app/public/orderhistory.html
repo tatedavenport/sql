@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #outer {
+            margin-top:20rem;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <div class="row">
+            <div class="twelve columns">
+                <table>
+                    <tr>
+                        <th>Date</th>
+                        <th>OrderID</th>
+                        <th>Order Total</th>
+                        <th>Food(s)</th>
+                        <th>Food Quantity</th>
+                    </tr>
+                    <!--insert values with ejs-->
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <form method="POST" action ="home">
+                    <button>Back</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+
+    </script>
+</body>
+</html>

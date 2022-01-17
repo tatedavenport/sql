@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Foodtruck</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #outer {
+            margin-top:20rem;
+        }
+
+        .hideThese {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .error {
+            color:red;
+        }
+
+        .pushDown {
+            margin-top:3rem;
+        }
+
+        #filter {
+            margin-top: 7rem;
+        }
+
+        .radios {
+            margin-top: 1.8rem !important;
+        }
+
+        .buttonRow {
+            margin-top:4rem;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <h1>
+            Create Foodtruck
+        </h1>
+        <form method="POST" action="/createfoodtruck">
+            <div class="row">
+                <div class="twelve columns">
+                    <label for="foodTruckName">
+                        Name
+                    </label>
+                    <input type="text" name="foodTruckName" id="foodTruckName">
+                </div>
+            </div>
+            <div class="row">
+                <div class="twelve columns">
+                    <label for="stationName">
+                        Station
+                    </label>
+                    <select name="stationName" id="stationName">
+                        <!--insert stationanmes here with ejs-->
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="twelve columns">
+                    <label for="assignedStaff">Assigned Staff</label>
+                    <!--insert checkbox inputs for each staff with ejs-->
+                </div>
+            </div>
+            <div class="row">
+                <div class="twelve columns">
+                    <label for="menuItem">Menu Item</label>
+                </div>
+            </div>
+            <div class="row">
+                <!--insert new menu items, each part in one of four columns-->
+            </div>
+            <div class="row">
+                <div class="twelve columns buttonRow">
+                    <button>Create</button>
+                </div>
+            </div>
+        </form>
+        <form>
+            <div class="row buttonRow">
+                <div class="twelve columns">
+                    <button>Back</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

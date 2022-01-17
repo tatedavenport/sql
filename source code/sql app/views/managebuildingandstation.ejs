@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Building and Station</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #capacity2 {
+            margin-left: 5px;
+        }
+
+        #capacity1 {
+            margin-right: 5px;
+        }
+
+        #filterRow {
+            margin-top: 10px;
+        }
+
+        #tableRow {
+            margin-top: 50px;
+        }
+
+        th {
+            text-align: center;
+        }
+        #firstButtonRow {
+            margin-top: 30px;
+        }
+
+        #outer{
+            padding-top: 150px;
+        }
+
+        .radios {
+            margin-top: 1.8rem !important;
+        }
+
+        form {
+            display: inline-block;
+        }
+
+        .hideThese {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .error {
+            color:red;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <h1 class=>Manage Building and Station</h1> 
+        <div class="row">
+            <div class="six columns">
+                <label for="buildingName">Building Name</label>
+                <select name="buildingName" id="buildingName">
+                <!--this is where to insert the building names with ejs-->
+                    <% buildings.forEach((building)=>{ %>
+                        <option value="<%= building.buildingName %>" name="buildingDropdown"><%= building.buildingName %></option>
+                    <% }); %>
+                    <option value=""></option>
+                </select>
+            </div>
+            <div class="six columns">
+                <label for="buildingTag">Building Tags</label>
+                <input name="buildingTag" id="buildingTag" type="text">
+            </div>
+        </div>
+        <div class="row">
+            <div class="six columns">
+                <label for="stationName">Station Name</label>
+                <select name="stationName" id="stationName">
+                <!--this is where to insert the station names with ejs-->
+                <% stations.forEach((station)=>{ %>
+                    <option value="<%= station.stationName %>" name="stationDropdown"><%= station.stationName %></option>
+                <% }); %>
+                <option value=""></option>
+                </select>
+            </div>
+            <div class="six columns">
+                <label for="capacity1">Capacity</label>
+                <input name="capacity1" id="capacity1" type="number">
+                <strong> - </strong>
+                <input name="capacity2" id="capacity2" type="number">
+            </div>
+        </div>
+        <div class="row" id="filterRow">
+            <input type="button" value="Filter" id="filter">
+        </div>
+        <div class="row" id="tableRow">
+            <div class="twelve columns">
+                <table id="table" class="u-full-width">
+                    <tr>
+                        <th>Building</th>
+                        <th>Tags</th>
+                        <th>Station</th>
+                        <th>Capacity</th>
+                        <th>Foodtrucks</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row" id="firstButtonRow">
+            <div class="twelve columns">
+                <form method="POST" action="/createbuildingpage"><input type="submit" value="Create Building" id="Create Building"></form>
+                <form method="POST" action="/updatebuildingpage" id="updateform"><input type="submit" value="Update Building" id="Update Building"></form>
+                <input type="submit" value="Delete Building" id="Delete Building">
+                <label id="buildingDeleteError" class="error"></label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <form method="POST" action="/createstationpage"><input type="submit" value="Create Station" id="Create Station"></form>
+                <form method="POST" action="/updatestationpage" id="updateStationForm"><input type="submit" value="Update Station" id="Update Station"></form>
+                <input type="button" value="Delete Station" id="Delete Station">
+                <label id="stationDeleteError" class="error"></label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                <form method="POST" action="/home"><input type="submit" value="Back"></form>
+            </div>
+        </div>
+    </div>
+    <label id="usernameLabel" class="hideThese"><%=usernameValue%></label>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+        let userLabel = document.getElementById("usernameLabel");
+        const username = userLabel.innerHTML; //this is so we know which user is currently on the page
+        const filter = document.getElementById("filter");
+        const buildingName = document.getElementById("buildingName");
+        const stationName = document.getElementById('stationName');
+        const buildingTag = document.getElementById('buildingTag');
+        const capacity1 = document.getElementById('capacity1');
+        const capacity2 = document.getElementById('capacity2');
+        const table = document.getElementById('table');
+        const updateBuilding = document.getElementById('Update Building');
+        const updateForm = document.getElementById('updateform');
+        const updateStation = document.getElementById('Update Station');
+        const updateStationForm = document.getElementById('updateStationForm');
+        const deleteStation = document.getElementById('Delete Station');
+        const stationDeleteError = document.getElementById('stationDeleteError');
+        const deleteBuilding = document.getElementById("Delete Building");
+        const buildingDeleteError = document.getElementById('buildingDeleteError');
+
+        let count = 0;
+
+        //add user info to page
+        let newInput = document.createElement("input"); //{type:"text", value: username, class:"hideThese"}
+        let forms = document.querySelectorAll('form');
+        [...forms].forEach((val, index)=>{
+            let newInput = document.createElement("input"); //{type:"text", value: username, class:"hideThese"}
+            newInput.setAttribute('type', 'text');
+            newInput.setAttribute('value', username);
+            newInput.setAttribute('class', "hideThese");
+            newInput.setAttribute('name', 'currentUser');
+            val.appendChild(newInput)
+        })
+
+        filter.addEventListener('click',(e)=>{
+            inputData = {
+                buildingName: buildingName.value,
+                stationName: stationName.value,
+                buildingTag: buildingTag.value,
+                capacity1: capacity1.value,
+                capacity2: capacity2.value
+            }
+            fetchOptions = {
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json"
+                },
+                body: JSON.stringify(inputData)
+            }
+            fetch("http://localhost:5000/managebuildingandstationfilter", fetchOptions).then((response)=>response.json()).then((data)=>{
+                console.log(data);
+                console.log(data);
+                //now insert data into table
+                console.log('updating')
+                updateTable(data);
+            })
+        });
+
+
+
+        function updateTable(data) {
+            //remove old elements first
+            clearTable(); //not sure if this works yet
+            data.forEach((element)=>{
+                //create new elements for table
+                let newRow = document.createElement("tr");
+                let buildingName = document.createElement("td");
+                let tags = document.createElement("td");
+                let stationName = document.createElement("td");
+                let capacity = document.createElement("td");
+                let foodTruckNames = document.createElement("td");
+                let radio = document.createElement("input");
+                radio.setAttribute("type", "radio");
+                radio.setAttribute("name", "buildingSelect");
+                radio.setAttribute("class", "radios");
+                radio.setAttribute("value", element.buildingName);
+                stationName.setAttribute("name", "stationName");
+                buildingName.setAttribute("name", "buildingName");
+
+                buildingName.innerHTML = element.buildingName;
+                tags.innerHTML = element.tags;
+                stationName.innerHTML = element.stationName;
+                capacity.innerHTML = element.capacity;
+                foodTruckNames.innerHTML = element.foodTruckNames;
+
+                newRow.appendChild(buildingName);
+                newRow.appendChild(tags);
+                newRow.appendChild(stationName);
+                newRow.appendChild(capacity);
+                newRow.appendChild(foodTruckNames);
+                newRow.appendChild(radio);
+                table.appendChild(newRow);
+            });
+        }
+
+        function clearTable() {        
+            $("#table tr:gt(0)").remove(); 
+        }
+
+
+
+        updateStationForm.addEventListener('submit', (e)=> {
+            let radios = document.getElementsByName('buildingSelect');
+            let buildingName;
+            let isChecked = false;
+            //check if any buttons are selected, prevent
+            for (var i = 0, length = radios.length; i < length; i++) {
+                if (radios[i].checked) {
+                    isChecked = true;
+                    buildingName = radios[i].value;
+                    break;
+                }
+            }
+            let hasStationName = false;
+            let stationName;
+            let buildingNames = document.getElementsByName('buildingName');
+            for (var i = 0; i < buildingNames.length; i++) {
+                if (buildingNames[i].innerHTML === buildingName) {
+                    if (buildingNames[i].nextSibling.nextSibling.innerHTML !== "") {
+                        hasStationName = true;
+                        stationName = buildingNames[i].nextSibling.nextSibling.innerHTML;
+                    }
+                }
+            }
+            console.log(hasStationName);
+            if (!hasStationName) {
+                //maybe add error
+            }
+            if (!isChecked || !hasStationName || stationName === "null") {
+                e.preventDefault();
+                //maybe add error
+            } else {
+                let buildingNameToSend = buildingName;
+                //add building name to form data
+                let forms = document.querySelectorAll('form');
+                [...forms].forEach((val, index)=>{
+                    let newInput = document.createElement("input");
+                    newInput.setAttribute('type', 'text');
+                    newInput.setAttribute('value', buildingNameToSend);
+                    newInput.setAttribute('class', "hideThese");
+                    newInput.setAttribute('name', 'buildingName');
+                    newInput.setAttribute('id', 'removeThis')
+                    val.appendChild(newInput);
+                });
+
+                //add station name to form data
+                [...forms].forEach((val, index)=>{
+                    let newInput = document.createElement("input");
+                    newInput.setAttribute('type', 'text');
+                    newInput.setAttribute('value', stationName);
+                    newInput.setAttribute('class', "hideThese");
+                    newInput.setAttribute('name', 'stationName');
+                    newInput.setAttribute('id', 'removeThis')
+                    val.appendChild(newInput);
+                });
+            }
+
+        });
+
+        updateForm.addEventListener('submit', (e)=> {
+            let radios = document.getElementsByName('buildingSelect');
+            let buildingName;
+            let isChecked = false;
+            //check if any buttons are selected, prevent
+            for (var i = 0, length = radios.length; i < length; i++) {
+                if (radios[i].checked) {
+                    isChecked = true;
+                    buildingName = radios[i].value;
+                    break;
+                }
+            }
+            let hasStationName = false;
+            if (!isChecked) {
+                e.preventDefault();
+                //maybe add error
+            } else {
+                let buildingNameToSend = buildingName;
+                //add building name to form data
+                let forms = document.querySelectorAll('form');
+                [...forms].forEach((val, index)=>{
+                    let newInput = document.createElement("input");
+                    newInput.setAttribute('type', 'text');
+                    newInput.setAttribute('value', buildingNameToSend);
+                    newInput.setAttribute('class', "hideThese");
+                    newInput.setAttribute('name', 'buildingName');
+                    newInput.setAttribute('id', 'removeThis')
+                    val.appendChild(newInput);
+                });
+            }
+
+        });
+       
+
+        
+
+        deleteStation.addEventListener('click', (e)=>{
+            let radios = document.getElementsByName('buildingSelect');
+            let isChecked = false;
+            let buildingName;
+            //check if any buttons are selected, prevent
+            for (var i = 0, length = radios.length; i < length; i++) {
+                if (radios[i].checked) {
+                    isChecked = true;
+                    buildingName = radios[i].value
+                    break;
+                }
+            }
+            if (isChecked) {
+                inputData = {
+                    currentUser: username,
+                    buildingName
+                };
+                fetchOptions = {
+                    method: "POST",
+                    headers: {
+                    "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(inputData)
+                }
+                fetch('http://localhost:5000/deletestation1', fetchOptions).then((response)=>response.json()).then((data)=>{
+                    //have stationname, perform query and delete correct entry
+                    if (data.response !== "OK") {
+                        //maybe print something that says "can't delete station on building that doesn't have station"
+                        stationDeleteError.innerHTML = "That entry only has a building";
+                    } else {
+                        let stationName = data.results[0].stationName;
+                        inputData = {
+                            currentUser: username,
+                            stationName
+                        }
+                        fetchOptions = {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(inputData)
+                        }
+                        fetch('http://localhost:5000/deletestation2', fetchOptions).then((response)=>response.json()).then((data)=>{
+                            if (data.response !== "OK") {
+                                console.log('can"t do that');
+                                stationDeleteError.innerHTML = "Can't delete that station";
+                            } else {
+                                let stationNames = document.getElementsByName('stationName');
+                                for (var i = 0; i < stationNames.length; i++) {
+                                    console.log(stationName)
+                                    if (stationNames[i].innerHTML === stationName) {
+                                        stationNames[i].parentNode.parentNode.removeChild(stationNames[i].parentNode);
+                                    }
+                                }
+                                //delete from dropdown as well'
+                                let stationDropdowns = document.getElementsByName('stationDropdown');
+                                for (var i = 0; i < stationDropdowns.length; i++) {
+                                    if (stationDropdowns[i].innerHTML === stationName) {
+                                        //buildingDropdowns[i].parentNode.parentNode.removeChild(buildingDropdowns[i].parentNode);
+                                        stationDropdowns[i].parentNode.removeChild(stationDropdowns[i]);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            } else {
+                //maybe do unchecked error
+            }
+        })
+
+        deleteBuilding.addEventListener('click', (e)=>{
+            let radios = document.getElementsByName('buildingSelect');
+            let isChecked = false;
+            let buildingName;
+            //check if any buttons are selected, prevent
+            for (var i = 0, length = radios.length; i < length; i++) {
+                if (radios[i].checked) {
+                    isChecked = true;
+                    buildingName = radios[i].value
+                    break;
+                }
+            }
+            if (isChecked) {
+                inputData = {
+                    currentUser: username,
+                    buildingName
+                }
+                fetchOptions = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(inputData)
+                }
+                //do fetch
+                fetch('http://localhost:5000/deletebuilding', fetchOptions).then((response)=>response.json()).then((data)=>{
+                    if (data.response !== "OK") {
+                        //error, couldn't delete
+                        buildingDeleteError.innerHTML = "Can't delete that building"
+                    } else {
+                        //then delete from list
+                        let buildingNames = document.getElementsByName('buildingName');
+                        for (var i = 0; i < buildingNames.length; i++) {
+                            if (buildingNames[i].innerHTML === buildingName) {
+                                buildingNames[i].parentNode.parentNode.removeChild(buildingNames[i].parentNode);
+                            }
+                        }
+                        //delete from dropdown as well
+                        let buildingDropdowns = document.getElementsByName('buildingDropdown');
+                        for (var i = 0; i < buildingDropdowns.length; i++) {
+                            if (buildingDropdowns[i].innerHTML === buildingName) {
+                                //buildingDropdowns[i].parentNode.parentNode.removeChild(buildingDropdowns[i].parentNode);
+                                buildingDropdowns[i].parentNode.removeChild(buildingDropdowns[i]);
+                            }
+                        }
+                    }
+                })
+            } else {
+                //maybe do unchecked error
+            }
+        })
+    </script>
+</body>
+</html>

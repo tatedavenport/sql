@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        header {
+            text-align: center;
+
+        }
+
+        label, input {
+            margin:auto;
+        }
+
+        div {
+            text-align: center;
+            position: relative;
+        }
+
+        .row {
+            padding:20px;
+        }
+
+        body {
+            background-color: #091f36;
+            color:lightgray;
+            overflow:hidden;
+            height:100vh;
+        }
+        #outer {
+            margin-top:100px !important;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="container" id="outer">
+        <h1>Register</h1>
+        <form action="/register">
+        <div class="row">
+            <div class="six columns">
+                <label for="username">Username</label>
+                <input type="text" name="username" id="username">
+                <label id="usernameError">Error: Username Taken</label>
+            </div>
+            <div class="six columns">
+                    <label for="email">Email</label>
+                    <input type="text" name="email" id="email">
+            </div>
+        </div>
+        <div class="row">
+            <div class="six columns">
+                    <label for="First Name">First Name</label>
+                    <input type="text" name="First Name" id="First Name">
+            </div>
+            <div class="six columns">
+                    <label for="Last Name">Last Name</label>
+                    <input type="text" name="Last Name" id="Last Name">
+            </div>
+        </div>
+        <div class="row">
+            <div class="six columns">
+                    <label for="Password">Password</label>
+                    <input type="text" name="Password" id="Password">
+            </div>
+            <div class="six columns">
+                    <label for="Confirm Password">Confirm Password</label>
+                    <input type="text" name="Confirm Password" id="Confirm Password">
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelve columns">
+                    <label for="Balance">Balance</label>
+                    <input type="text" name="Balance" id="Balance">
+                </div>
+            </div>
+            <div class="twelve columns">
+                    <label for="Admin">Admin</label>
+                    <input type="radio" name="employeeType" id="Admin" value="Admin">
+                    <label for="Staff">Staff</label>
+                    <input type="radio" name="employeeType" id="Staff" value="Staff">
+                    <label for="Manager">Manager</label>
+                    <input type="radio" name="employeeType" id="Manager" value="Manager">
+            </div>
+        </div>
+        </form>
+    </div>
+    <script>
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            height:100vh;
+            background-color: #091f36;
+            overflow:hidden;
+        }
+
+        input, h1 {
+            color:white !important;
+        }
+
+        #outer {
+            margin-top:300px !important;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- <input type="button" value="Explore" id="explore">
+    <input type="button" value="View Order History" id="viewOrderHistory">
+    <input type="button" value="View Current Information" id="viewCurrentInformation">
+    <input type="button" value="Manage Foodtrucks" id="manageFoodTrucks">
+    <input type="button" value="View Footruck Summary" id="viewFoodTruckSummary">
+    <input type="button" value="Manage Building & Station" id="manageBuildingAndStation">
+    <input type="button" value="Manage Food" id="manageFood"> -->
+    <div class="container" id="outer">
+        <h1 class=>Home</h1>
+        <div class="row">
+            <div class="six columns" >
+                <form action="/prac" method="POST"><input type="submit" value="Explore" id="explore" class="u-full-width"></form>
+                <form><input type="submit" value="View Order History" id="viewOrderHistory" class="u-full-width"></form>
+                <form><input type="submit" value="View Current Information" id="viewCurrentInformation" class="u-full-width"></form>
+                <form><input type="submit" value="Manage Foodtrucks" id="manageFoodTrucks" class="u-full-width"></form>
+            </div>
+            <div class="six columns">
+                <form><input type="submit" value="View Footruck Summary" id="viewFoodTruckSummary" class="u-full-width"></form>
+                <form><input type="submit" value="Manage Building & Station" id="manageBuildingAndStation" class="u-full-width"></form>
+                <form><input type="submit" value="Manage Food" id="manageFood" class="u-full-width"></form>
+            </div>
+        </div>
+    </div>
+    <script>
+        let explore = document.getElementById("explore");
+        let viewOrderHistory = document.getElementById("viewOrderHistory");
+        let viewCurrentInformation = document.getElementById("viewCurrentInformation");
+        let manageFoodTrucks = document.getElementById("manageFoodTrucks");
+        let viewFoodTruckSummary = document.getElementById("viewFoodTruckSummary");
+        let manageBuildingAndStation = document.getElementById("manageBuildingAndStation");
+        let manageFood = document.getElementById("manageFood");
+
+        explore.addEventListener('click', (e)=>{
+            fetch("http://localhost:5000/prac", {
+                method:"POST"
+            }).then((response)=>response.text()).then((html)=>{
+                let body = document.querySelector("body");
+                body.innerHTML = html;
+            })
+        });
+    </script>
+</body>
+</html>

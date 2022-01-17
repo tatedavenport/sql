@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summary Detail</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #091f36;
+            color:lightgray;
+        }
+
+        #outer {
+            margin-top:20rem;
+        }
+
+        .hideThese {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .error {
+            color:red;
+        }
+
+
+        .radios {
+            margin-top: 1.8rem !important;
+        }
+
+        #filter {
+            margin-top: 2.2rem;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Summary Detail</h1>
+        <div class="row">
+            <div class="twelve columns">
+                <label>Food Truck Name:</label>
+                <label><!--insert foodtruck name with ejs--></label>
+            </div>
+        </div>
+        <div class="row">
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th>Total Purchase</th>
+                    <th># Orders</th>
+                    <th>Food(s)</th>
+                </tr>
+                <!--insert table results with ejs-->
+            </table>
+        </div>
+        <div class="row">
+            <form action="/foodtrucksummarypage" method="POST">
+                <button>Back</button>
+            </form>
+        </div>
+    </div>
+    <script>
+
+    </script>
+</body>
+</html>
