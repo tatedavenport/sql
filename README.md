@@ -1,2 +1,2 @@
 # sql
-MySQL schema for the GATECH foodtruck system
+MySQL schema for the GATECH foodtruck system - Deprecated
