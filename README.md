@@ -1,2 +1,2 @@
 # sql
-Script for generating import statements from excel file(of a specific format)
+MySQL schema for the GATECH foodtruck system
